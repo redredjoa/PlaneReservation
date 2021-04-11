@@ -1,0 +1,37 @@
+package team9;
+
+import team9.Data.*;
+
+public class Menu {
+	
+	RunData rData;
+	
+	public Menu(RunData rData) {
+		this.rData = rData;
+	}
+	
+	public void show() {
+		mainMenu();
+	}
+	
+	private void mainMenu() {
+		
+		while(true) {
+			
+			for(int i = 0; i < rData.plane.size(); i++) {
+				Plane plane = rData.plane.get(i);
+				
+				for(int j = 0; j < plane.getClassCount(); j++) {
+					PClass pClass = plane.getClass(j); 
+
+					System.out.println("=========================");
+					System.out.println(pClass.getName());
+					System.out.println("=========================");
+					pClass.show(false); 
+					System.out.println("=========================");
+				}
+			}
+			break;
+		}
+	}
+}

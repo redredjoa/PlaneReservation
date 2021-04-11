@@ -1,0 +1,7 @@
+id=admin
+password=qwer1234
+name=관리자
+birthday=000101
+mileage=0
+reservationID=>
+admin=true

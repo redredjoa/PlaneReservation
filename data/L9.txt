@@ -1,0 +1,43 @@
+name=A01
+id=L9
+ 
+departure=서울
+departure_time=2021-03-29 15:30
+
+arrival=뉴욕
+arrival_time=2021-03-29 18:30
+
+class_count=3
+class_name=>
+	퍼스트
+	비즈니스
+	이코노미
+class_price=>
+	3000000
+	1000000
+	400000
+class_0=>
+	E
+	OXXXO:
+	OXXXO:
+	L
+class_1=>
+	E
+	OOXOO:
+	OOXOO:
+	L
+	OOXOO:
+	OOXOO:
+	E
+class_2=>
+	E
+	OOXOO
+	OOXOO
+	OOXOO:
+	OXXXO:
+	L
+	OXXXO:
+	OOXOO:
+	OOXOO
+	OOXOO
+	E
