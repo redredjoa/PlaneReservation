@@ -18,8 +18,8 @@ public class Menu {
 		
 		while(true) {
 			
-			for(int i = 0; i < rData.plane.size(); i++) {
-				Plane plane = rData.plane.get(i);
+			for(String key : rData.getPlaneManager().plane.keySet()) {
+				Plane plane = rData.getPlaneManager().plane.get(key);
 				
 				for(int j = 0; j < plane.getClassCount(); j++) {
 					PClass pClass = plane.getClass(j); 
@@ -27,7 +27,7 @@ public class Menu {
 					System.out.println("=========================");
 					System.out.println(pClass.getName());
 					System.out.println("=========================");
-					pClass.show(false); 
+					plane.showClass(j, false); 
 					System.out.println("=========================");
 				}
 			}

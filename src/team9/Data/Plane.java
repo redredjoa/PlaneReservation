@@ -1,12 +1,20 @@
 package team9.Data; 
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.text.ParseException; 
 import java.util.*;
+ 
 
-import team9.Data.PClass.SeatType;
+class SeatPosition {
+	public int index, row, col;
+	
+	public SeatPosition(int index, int row, int col) {
+		this.index = index;
+		this.row = row;
+		this.col = col;
+	}
+}
 
-public class Plane {	  
+public class Plane {	 
 	
 	//***************************
 	//		   VARIABLESs
@@ -69,16 +77,68 @@ public class Plane {
 	}	
  
 	//***************************
+	//		 public METHODs
+	//
+	//***************************
+  
+	public void showClass(int index, boolean alsoReservation) {
+		int total = 0;
+		
+		for(int i = 0; i <= index; i++) {
+			if(i == index) { 
+				pClass[index].show(total, alsoReservation);
+				
+				return;
+			}
+			total += pClass[i].getRowCount();
+		}
+	} 
+	
+	/** 좌석 번호로부터 좌석의 위치를 얻어 반환합니다. */
+	public SeatPosition getSeatPosition(String seatID) {
+		int index = 0, row = seatID.charAt(0) - 'A', col = seatID.charAt(1) - '0';
+	 
+		while(row >= pClass[index].getRowCount()) { 
+			row -= pClass[index++].getRowCount();
+		}
+		 
+		return new SeatPosition(index, row, col);
+	}
+	
+	public String getSeatID(int index, int row, int col) {
+		return getSeatID(new SeatPosition(index, row, col));
+	} 
+	
+	/** 지정된 좌석의 좌석 번호를 반환합니다.*/
+	public String getSeatID(SeatPosition pos) {
+		int total = 0;
+		
+		for(int i = 0; i <= pos.index; i++) {
+			if(i == pos.index) {
+				total += pos.row;
+				
+				break;
+			}
+			total += pClass[i].getRowCount();
+		}
+		
+		return String.format("%c%d", 'a' + total, pos.col);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		return id.equals(((Plane)o).id); 
+	}
+
+	//***************************
 	//		    METHODs
 	//
 	//***************************
- 
-	public String getReservationID(int index, int row, int col) {
-		if(pClass[index].getReservation(row, col) == SeatType.NONE) {
-			return null;
-		}
-		return String.format("%s-%s-%c%d-%c", id, new SimpleDateFormat("yyMMdd").format(departureTime), 'a' + row, col, (pClass[index].getReservation(row, col) == SeatType.ADULT) ? 'a' : 'c');
-	}
+
+	//***************************
+	//		    METHODs
+	//
+	//***************************
 	
 	/** 비행기 ID가 유효한지를 반환합니다. */
 	private static boolean checkID(String id) {
@@ -86,7 +146,7 @@ public class Plane {
 	}
 	
 	/** 데이터로부터 비행기 정보를 읽고 객체를 생성합니다. */ 
-	public static Plane parse(Data data) {
+	protected static Plane parse(Data data) {
 		Plane result = new Plane(); 
 		
 		try {			
@@ -129,5 +189,4 @@ public class Plane {
 		
 		return result; 
 	}
- 
 }

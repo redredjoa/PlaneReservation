@@ -29,11 +29,15 @@ public class Data {
 		}  
 	}
 	
+	public void set(String key, String value) { 
+		data.put(key, value);
+	}
+	
 	public Set<String> keyset (){
 		return data.keySet();
 	}
 	
-	public static Data read(File file) {
+	protected static Data read(File file) {
 		var result = new Data();
 		
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF8"))) {    
@@ -108,5 +112,27 @@ public class Data {
 		}
 		
 		return result;
+	}
+	
+	protected static void write(Data data, File file) {
+		try(BufferedWriter writer = new BufferedWriter(new FileWriter(file))) { 
+			for(String key : data.keyset()) {
+				String value = data.get(key); 
+
+				if(value.contains("\n")) {
+					writer.write(String.format("%s=>\n", key));
+
+					String[] values = value.split("\n");
+					for(int i = 0; i < values.length; i++) { 
+						writer.write(String.format("\t%s\n", values[i]));
+					}
+				}
+				else { 
+				    writer.write(String.format("%s=%s\n", key, value)); 
+				} 
+			} 
+		} catch (IOException e) {
+		    e.printStackTrace();
+		}
 	}
 }

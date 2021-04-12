@@ -7,7 +7,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
  
-// 비행기 클래스에 대한 객체를 생성하기위해 제작된 클래스
+// 비행기 클래스(등급)의 객체를 생성하기 위한 클래스(원형)
 public class PClass { 
 	public enum SeatType{
 		NONE, ADULT, CHILD
@@ -41,9 +41,9 @@ public class PClass {
 	//***************************
 	
 	private String name;
-	
+
 	private boolean[][] isAvailable;
-	private SeatType[][] reservation;
+	private SeatType[][] seatType; 
 	private List<Element> element = new ArrayList<Element>(); 
 	
 	//***************************
@@ -72,8 +72,17 @@ public class PClass {
 	}
 	
 	/** 해당 좌석의 예약 정보를 반환합니다. */
-	public SeatType getReservation(int row, int col) {
-		return reservation[row][col];
+	public SeatType getSeatType(int row, int col) {
+		return seatType[row][col];
+	} 
+	
+	//***************************
+	//			SETTER
+	//
+	//***************************
+	 
+	protected void setSeatType(int row, int col, SeatType type) {
+		this.seatType[row][col] = type;
 	} 
 	
 	//***************************
@@ -90,12 +99,19 @@ public class PClass {
 	}
 	
 	//***************************
+	//		 public METHODs
+	//
+	//***************************
+	
+	//NOTHING
+
+	//***************************
 	//		    METHODs
 	//
 	//***************************
-	 
+
 	/** 비행기 좌석 데이터 요소의 문자열을 파싱하여 객체로 만듭니다. */
-	public static PClass parse(String name, String str) {
+	protected static PClass parse(String name, String str) {
 		PClass result = new PClass(name);
 		
 		List<boolean[]> seat = new ArrayList<boolean[]>();
@@ -154,14 +170,14 @@ public class PClass {
 		}
  
 		result.isAvailable = seat.toArray(new boolean[seat.size()][]);
-		result.reservation = new SeatType[result.getRowCount()][result.getColCount()];
+		result.seatType = new SeatType[result.getRowCount()][result.getColCount()];
 		
 		return result; 
 	} 
 
 	/** 해당 비행기 클래스의 좌석 배치를 보여줍니다. 
 	 * @param withReservation 예약 정보도 표시할지에 대한 여부입니다. */
-	public void show(boolean showReservation) {  
+	protected void show(int startIndex, boolean alsoReservation) {  
 		System.out.print("  ");
 		for(int i = 0; i < getColCount(); i++) {
 			System.out.printf("%2d", i + 1);
@@ -194,20 +210,20 @@ public class PClass {
 			
 			// 현재 행이 창문석인 경우 문자 'ㅣ'를 출력합니다.
 			if(isWIN) { 
-				System.out.printf("%cㅣ", 'A' + i );  
+				System.out.printf("%cㅣ", 'a' + startIndex + i );  
 			}
 			else { 
-				System.out.printf("%-2c", 'A' + i );  
+				System.out.printf("%-2c", 'a' + startIndex + i );  
 			} 
 			
 			for(int j = 0; j < getColCount(); j++) {
-				if(showReservation) {
+				if(alsoReservation) {
 					if(isAvailable[i][j]) {
-						if(reservation[i][j] == SeatType.NONE) { 
+						if(seatType[i][j] == SeatType.NONE) { 
 							System.out.printf("%2c", 'o');
 							}
 						else {
-							System.out.printf("%2c", (reservation[i][j] == SeatType.CHILD) ? 'c' : 'x'); 
+							System.out.printf("%2c", (seatType[i][j] == SeatType.CHILD) ? 'c' : 'x'); 
 						}
 					}
 				}

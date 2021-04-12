@@ -4,9 +4,15 @@ import java.io.*;
 import java.util.*;
 
 public class RunData { 
-	public List<User> user = new ArrayList<User>();
-	public List<Plane> plane = new ArrayList<Plane>();
-	public HashMap<String, Reservation> reservation = new HashMap<String, Reservation>();
+	public HashMap<String, User> user = new HashMap<String, User>();
+	
+	private PlaneManager planeManager = new PlaneManager();
+	 
+	public User currentUser = null;
+	
+	public PlaneManager getPlaneManager() {
+		return planeManager;
+	}
 	
 	public RunData() { 
 		try {
@@ -53,11 +59,35 @@ public class RunData {
 	/** 입력받은 데이터를 이용해서 사용자와 비행기 정보 객체를 생성합니다. */
 	public void parse(Data[] userData, Data[] planeData) {
 		for(int i = 0; i < userData.length; i++) {
-			user.add(User.parse(userData[i]));
+			User u = User.parse(userData[i]);
+			user.put(u.getID(), u);
 		}
 		
 		for(int i = 0; i < planeData.length; i++) {
-			plane.add(Plane.parse(planeData[i]));
+			Plane p = Plane.parse(planeData[i]);
+			planeManager.plane.put(p.getID(), p);
 		}
+		
+		for(String key : user.keySet()) {
+			for(int index = 0; index < user.get(key).getReservationIDCount(); index++) {
+				User u = user.get(key);
+				String id = u.getReservationID(index);
+				 
+				planeManager.reserve(u, id);
+			}
+		}
+		
+	}
+
+	public void save() { 
+		/*
+		for(String key : user.keySet()) {
+			User u = user.get(key);
+			
+			Data data = User.parseToData(u);
+			
+			Data.write(data, new File(String.format("D:/test/%s.txt", user.get(key).getID())));
+		}
+		*/
 	}
 }

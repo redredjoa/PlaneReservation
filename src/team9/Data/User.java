@@ -18,14 +18,14 @@ public class User {
 	
 	private boolean isAdministrator; 
 	
-	private List<String> reservationID = new ArrayList<String>();
+	protected List<String> reservationID = new ArrayList<String>();
 	
 	//***************************
 	//			GETTER
 	//
 	//***************************
 	
-	public String getId() {
+	public String getID() {
 		return id;
 	}
 
@@ -47,6 +47,14 @@ public class User {
 	
 	public boolean isAdministrator() {
 		return isAdministrator;
+	}
+
+	public String getReservationID(int index) {
+		return reservationID.get(index);
+	}
+	
+	public int getReservationIDCount() {
+		return reservationID.size();
 	}
 
 	//***************************
@@ -85,7 +93,7 @@ public class User {
 	}
 
 	/** 데이터로부터 유저 정보를 읽고 객체를 생성합니다. */
-	public static User parse(Data data) {
+	protected static User parse(Data data) {
 		User result = new User(); 
 		
 		try {
@@ -117,5 +125,32 @@ public class User {
 		}
 		
 		return result; 
+	}
+	 
+	protected static Data parseToData(User user) {
+		Data result = new Data();
+		
+		result.set("id", user.id);  
+		result.set("password", user.password);  
+		result.set("name", user.name);  
+		result.set("birthday", user.birthday.toString());
+		result.set("mileage", Integer.toString(user.mileage));  
+		result.set("isAdministrator", user.isAdministrator ? "true" : "false");
+
+		  StringBuffer sb = new StringBuffer();
+	      for(int i = 0; i < user.reservationID.size(); i++) {
+	         sb.append(user.reservationID.get(i));
+	         sb.append("\n");
+	      }
+	      String value = sb.toString();
+		
+		result.set("reservationID", value); 
+		
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		return id.equals(((User)o).id); 
 	}
 }
